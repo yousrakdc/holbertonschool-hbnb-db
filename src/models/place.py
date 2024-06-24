@@ -1,24 +1,29 @@
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
+from src import db
+from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean, Text, Float
+from datetime import datetime
 
 
 class Place(Base):
     """Place:
     amenity_ids (List of UUIDs referencing Amenities),
     """
+    __tablename__ = 'places'
 
-    name: str
-    description: str
-    address: str
-    latitude: float
-    longitude: float
-    host_id: str
-    city_id: str
-    price_per_night: int
-    number_of_rooms: int
-    number_of_bathrooms: int
-    max_guests: int
+    id = Column(String(36), primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, nullable=True)
+    address = Column(String(255), nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    host_id = Column(String(36), ForeignKey('hosts.id'), nullable=False)
+    city_id = Column(String(36), ForeignKey('cities.id'), nullable=False)
+    price_per_night = Column(Integer, nullable=False)
+    number_of_rooms = Column(Integer, nullable=False)
+    number_of_bathrooms = Column(Integer, nullable=False)
+    max_guests = Column(Integer, nullable=False)
 
     def __init__(self, data: dict | None = None, **kw) -> None:
         super().__init__(**kw)

@@ -1,10 +1,21 @@
 from src.models.base import Base
-
+from flask_sqlalchemy import SQLAlchemy
+from src import db
+from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean
+from datetime import datetime
 
 class User(Base):
-    email: str
-    first_name: str
-    last_name: str
+
+    __tablename__ = 'users'
+    
+    id = Column(String(36), primary_key=True)
+    email = Column(String(120), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(50), nullable=True)
+    last_name = Column(String(50), nullable=True)
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.current_timestamp())
+    updated_at = Column(DateTime, onupdate=func.current_timestamp())
 
     def __init__(self, email: str, first_name: str, last_name: str, **kw) -> None:
         super().__init__(**kw)

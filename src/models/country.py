@@ -1,7 +1,13 @@
-class Country:
-    name: str
-    code: str
-    cities: list
+from src import db
+from sqlalchemy import Column, Integer, String
+from datetime import datetime
+
+class Country():
+    __tablename__ = 'countries'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    code = Column(String(2), nullable=False, unique=True)
 
     def __init__(self, name: str, code: str, **kw) -> None:
         super().__init__(**kw)

@@ -1,8 +1,23 @@
 from src.models.base import Base
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from src import db
+from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime
+from datetime import datetime
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
+db = SQLAlchemy(app)
 
 class Amenity(Base):
-    name: str
+
+    __tablename__ = 'amenities'
+
+    id = Column(String(36), primary_key=True)
+    place_id = Column(Integer, ForeignKey('places.id'), nullable=False)
+    name = Column(String(50), nullable=True)
+    created_at = Column(DateTime, default=func.current_timestamp())
+    updated_at = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp())
 
     def __init__(self, name: str, **kw) -> None:
         super().__init__(**kw)
