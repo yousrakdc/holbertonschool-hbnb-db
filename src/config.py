@@ -1,4 +1,6 @@
 import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 
 class Config:
@@ -19,6 +21,11 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL", "postgresql://user:password@localhost/hbnb_prod"
     )
+
+app = Flask(__name__)
+app.config.from_object('config.DevelopmentConfig' if os.environ.get('ENV') == 'development' else 'config.ProductionConfig')
+db = SQLAlchemy(app)
