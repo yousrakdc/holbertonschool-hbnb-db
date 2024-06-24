@@ -2,15 +2,19 @@ from src.models.base import Base
 from flask_sqlalchemy import SQLAlchemy
 from src import db
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
+db = SQLAlchemy(app)
+
 class Amenity(Base, db.Model):
 
     __tablename__ = 'amenities'
 
-    id = db.Column(db.String(36), primary_key=True
-    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False))
+    id = db.Column(db.String(36), primary_key=True)
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
     name = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     def __init__(self, name: str, **kw) -> None:
         super().__init__(**kw)
