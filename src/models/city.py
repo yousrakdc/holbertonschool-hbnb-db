@@ -3,7 +3,7 @@ from src.models.country import Country
 from src import db
 
 
-class City(Base, db.Model):
+class City(Base):
     __tablename__ = 'cities'
 
     id = db.Column(db.Integer, primary_key=True)
