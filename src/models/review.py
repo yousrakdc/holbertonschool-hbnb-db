@@ -1,10 +1,10 @@
-from src.models.base import Base
+from src.models.base import Base2
 from src.models.place import Place
 from src.models.user import User
 from src import db
-from sqlaclchemy import Column, Text, Float, DateTime, Integer, ForeignKey
+from sqlalchemy import Column, Text, Float, DateTime, Integer, ForeignKey
 
-class Review(Base):
+class Review(Base2):
 
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)

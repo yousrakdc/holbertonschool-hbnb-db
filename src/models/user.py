@@ -1,9 +1,9 @@
-from src.models.base import Base
+from src.models.base import Base2
 from flask_sqlalchemy import SQLAlchemy
 from src import db
 
 
-class User(Base):
+class User(Base2):
 
     __tablename__ = 'users'
     

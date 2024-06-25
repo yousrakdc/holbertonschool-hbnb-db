@@ -1,12 +1,8 @@
-from src.models.base import Base
+from src.models.base import Base2
 from flask_sqlalchemy import SQLAlchemy
 from src import db
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
-db = SQLAlchemy(app)
-
-class Amenity(Base, db.Model):
+class Amenity(Base2):
 
     __tablename__ = 'amenities'
 

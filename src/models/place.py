@@ -1,10 +1,10 @@
-from src.models.base import Base
+from src.models.base import Base2
 from src.models.city import City
 from src.models.user import User
 from src import db
 
 
-class Place(Base):
+class Place(Base2):
     """Place:
     amenity_ids (List of UUIDs referencing Amenities),
     """
