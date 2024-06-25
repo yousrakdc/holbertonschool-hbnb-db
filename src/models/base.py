@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Any, Optional
 from uuid import uuid4
 from abc import ABC, abstractmethod
+from src import db
 
-
-class Base(ABC):
+class Base(ABC, db.Model):
     id: str
     created_at: datetime
     updated_at: datetime

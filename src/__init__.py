@@ -15,10 +15,6 @@ def create_app(config_class=None) -> Flask:
     else:
         app.config.from_object("src.config.DevelopmentConfig")
 
-    # Configure the SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
     # Initialize the SQLAlchemy extension
     db.init_app(app)
 
