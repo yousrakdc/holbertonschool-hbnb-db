@@ -6,6 +6,13 @@ from src.models.base import Base
 from src.persistence.repository import Repository
 from utils.constants import FILE_STORAGE_FILENAME
 
+from src.models.amenity import Amenity, PlaceAmenity
+from src.models.city import City
+from src.models.country import Country
+from src.models.place import Place
+from src.models.review import Review
+from src.models.user import User
+
 class DataManager(Repository):
     """
     A flexible data management class that supports both file-based and database storage.
@@ -37,6 +44,16 @@ class DataManager(Repository):
         "placeamenity": [],
     }
 
+    models = {
+        "amenity": Amenity,
+        "city": City,
+        "country": Country,
+        "place": Place,
+        "placeamenity": PlaceAmenity,
+        "review": Review,
+        "user": User,
+    }
+
     def __init__(self, db_session: Session = None) -> None:
         """
         Initialize the DataManager.
@@ -55,7 +72,7 @@ class DataManager(Repository):
         This method is used for file-based storage.
         """
         serialized = {
-            k: [v.to_dict() for v in l if type(v) != dict]
+            k: [v.to_dict() for v in l if isinstance(v, Base)]
             for k, l in self.__data.items()
         }
 
@@ -72,30 +89,22 @@ class DataManager(Repository):
         Returns:
             list: A list of all objects of the specified model.
         """
-        if self.use_database:
-            model_class = self._get_model_class(model_name)
-            return self.db_session.query(model_class).all()
-        else:
-            return self.__data.get(model_name, [])
+        return self.__data.get(model_name, [])
 
     def get(self, model_name: str, obj_id: str):
         """
-        Retrieve a specific object by its ID and model name.
+        Get an object by its ID.
 
         Args:
             model_name (str): The name of the model.
             obj_id (str): The ID of the object to retrieve.
 
         Returns:
-            object: The retrieved object, or None if not found.
+            Base: The object with the specified ID, or None if not found.
         """
-        if self.use_database:
-            model_class = self._get_model_class(model_name)
-            return self.db_session.query(model_class).filter_by(id=obj_id).first()
-        else:
-            for obj in self.get_all(model_name):
-                if obj.id == obj_id:
-                    return obj
+        for obj in self.get_all(model_name):
+            if obj.id == obj_id:
+                return obj
         return None
 
     def reload(self):
@@ -113,7 +122,7 @@ class DataManager(Repository):
 
             for model, data in file_data.items():
                 for item in data:
-                    instance: Base = self._get_model_class(model)(**item)
+                    instance: Base = self.models[model](**item)
 
                     if "created_at" in item:
                         instance.created_at = datetime.fromisoformat(item["created_at"])
@@ -182,7 +191,7 @@ class DataManager(Repository):
             obj (Base): The object to delete.
 
         Returns:
-            bool: True if the object was successfully deleted, False otherwise.
+            bool: True if the object was deleted, False otherwise.
         """
         if self.use_database:
             self.db_session.delete(obj)
@@ -195,51 +204,7 @@ class DataManager(Repository):
                 return False
 
             self.__data[class_name].remove(obj)
+
             self._save_to_file()
+
             return True
-
-    def _get_model_class(self, model_name: str):
-        """
-        Get the class of a model by its name.
-
-        Args:
-            model_name (str): The name of the model.
-
-        Returns:
-            type: The class of the model.
-        """
-        from src.models.amenity import Amenity, PlaceAmenity
-        from src.models.city import City
-        from src.models.country import Country
-        from src.models.place import Place
-        from src.models.review import Review
-        from src.models.user import User
-
-        models = {
-            "amenity": Amenity,
-            "city": City,
-            "country": Country,
-            "place": Place,
-            "placeamenity": PlaceAmenity,
-            "review": Review,
-            "user": User,
-        }
-        return models.get(model_name.lower())
-
-    def save_user(self, user):
-        """
-        Save a user object to the storage.
-        This method demonstrates conditional logic based on the storage type.
-
-        Args:
-            user (User): The user object to save.
-
-        Returns:
-            User: The saved user object.
-        """
-        if self.use_database:
-            self.db_session.add(user)
-            self.db_session.commit()
-        else:
-            self.save(user)
-        return user
