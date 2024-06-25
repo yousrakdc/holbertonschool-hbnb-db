@@ -4,7 +4,7 @@ from src.models.user import User
 from src import db
 
 
-class Review(Base, db.Model):
+class Review(Base):
 
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
