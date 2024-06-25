@@ -1,6 +1,8 @@
 from src.models.base import Base
 from src.models.country import Country
 from src import db
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class City(Base):

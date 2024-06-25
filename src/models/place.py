@@ -1,8 +1,8 @@
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
-from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean, Text, Float
 from src import db
+
 
 class Place(Base):
     """Place:

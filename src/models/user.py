@@ -2,6 +2,7 @@ from src.models.base import Base
 from flask_sqlalchemy import SQLAlchemy
 from src import db
 
+
 class User(Base):
 
     __tablename__ = 'users'
