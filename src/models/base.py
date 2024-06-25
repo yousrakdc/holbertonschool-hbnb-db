@@ -64,3 +64,4 @@ class Base(db.Model):
     @staticmethod
     @abstractmethod
     def update(entity_id: str, data: dict) -> Any | None: ...
+

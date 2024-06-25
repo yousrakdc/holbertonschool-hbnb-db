@@ -17,6 +17,7 @@ class User(Base):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, onupdate=db.func.current_timestamp())
 
+
     def __init__(self, email: str, first_name: str, last_name: str, **kw) -> None:
         super().__init__(**kw)
         self.email = email

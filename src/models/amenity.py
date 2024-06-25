@@ -59,6 +59,7 @@ class Amenity(Base):
 
 
 class PlaceAmenity(Base):
+  
     place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
     amenity_id = db.Column(db.String(36), db.ForeignKey('amenities.id'), nullable=False)
 
