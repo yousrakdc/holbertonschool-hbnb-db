@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any, Optional
 from uuid import uuid4
 from abc import ABC, abstractmethod
+from sqlalchemy import DateTime, func, String, Column
 
 
 class Base(ABC):
@@ -59,3 +60,12 @@ class Base(ABC):
     @staticmethod
     @abstractmethod
     def update(entity_id: str, data: dict) -> Any | None: ...
+
+
+class Base2(Base, db.Model):
+
+    __abstract__ = True
+    
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
