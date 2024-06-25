@@ -1,11 +1,12 @@
-from src.models.base import Base2
+from src.models.base import Base
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy.sql import func
+from datetime import datetime
 from src import db
 
 
-class User(Base2):
-
-    __tablename__ = 'users'
+class User(Base):
     
     id = db.Column(db.String(36), primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)

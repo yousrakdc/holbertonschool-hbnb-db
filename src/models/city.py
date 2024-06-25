@@ -1,12 +1,11 @@
-from src.models.base import Base2
+from src.models.base import Base
 from src.models.country import Country
 from src import db
 from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 
-class City(Base2):
-    __tablename__ = 'cities'
+class City(Base):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
