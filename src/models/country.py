@@ -1,13 +1,11 @@
 from src import db
-from sqlalchemy import Column, Integer, String
-from datetime import datetime
 
-class Country():
+class Country(db.Model):
     __tablename__ = 'countries'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    code = Column(String(2), nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(2), nullable=False, unique=True)
 
     def __init__(self, name: str, code: str, **kw) -> None:
         super().__init__(**kw)

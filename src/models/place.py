@@ -1,10 +1,8 @@
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
-from src import db
 from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean, Text, Float
-from datetime import datetime
-
+from src import db
 
 class Place(Base):
     """Place:
@@ -12,18 +10,18 @@ class Place(Base):
     """
     __tablename__ = 'places'
 
-    id = Column(String(36), primary_key=True)
-    name = Column(String(100), nullable=False)
-    description = Column(Text, nullable=True)
-    address = Column(String(255), nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    host_id = Column(String(36), ForeignKey('hosts.id'), nullable=False)
-    city_id = Column(String(36), ForeignKey('cities.id'), nullable=False)
-    price_per_night = Column(Integer, nullable=False)
-    number_of_rooms = Column(Integer, nullable=False)
-    number_of_bathrooms = Column(Integer, nullable=False)
-    max_guests = Column(Integer, nullable=False)
+    id = db.Column(db.String(36), primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    address = db.Column(db.String(255), nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    host_id = db.Column(db.String(36), db.ForeignKey('hosts.id'), nullable=False)
+    city_id = db.Column(db.String(36), db.ForeignKey('cities.id'), nullable=False)
+    price_per_night = db.Column(db.Integer, nullable=False)
+    number_of_rooms = db.Column(db.Integer, nullable=False)
+    number_of_bathrooms = db.Column(db.Integer, nullable=False)
+    max_guests = db.Column(db.Integer, nullable=False)
 
     def __init__(self, data: dict | None = None, **kw) -> None:
         super().__init__(**kw)

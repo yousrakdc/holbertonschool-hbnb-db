@@ -10,6 +10,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+    QLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///development.db")
     DEBUG = True
 
 

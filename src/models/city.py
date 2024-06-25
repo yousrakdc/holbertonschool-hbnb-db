@@ -1,18 +1,15 @@
 from src.models.base import Base
 from src.models.country import Country
-from sqlalchemy.orm import relationship, backref
 from src import db
-from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean
-from datetime import datetime
 
 
 class City(Base):
     __tablename__ = 'cities'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    country_code = Column(String(2), ForeignKey('countries.code'), nullable=False)
-    country = relationship('Country', backref=backref('cities', lazy=True))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    country_code = db.Column(db.String(2), db.ForeignKey('countries.code'), nullable=False)
+    country = db.relationship('Country', backref=db.backref('cities', lazy=True))
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
         super().__init__(**kw)

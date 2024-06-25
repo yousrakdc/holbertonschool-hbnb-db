@@ -2,20 +2,18 @@ from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
 from src import db
-from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean, Text, Float
-from datetime import datetime
 
 
-class Review(Base):
+class Review(Base, db.Model):
 
     __tablename__ = 'reviews'
-    id = Column(Integer, primary_key=True)
-    place_id = Column(Integer, ForeignKey('places.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    comment = Column(Text, nullable=False)
-    rating = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True)
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    comment = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __init__(
         self, place_id: str, user_id: str, comment: str, rating: float, **kw
