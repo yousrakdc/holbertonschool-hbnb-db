@@ -37,15 +37,6 @@ CREATE TABLE cities (
     FOREIGN KEY (country_code) REFERENCES countries(code)
 );
 
--- Create Amenities table
-CREATE TABLE amenities (
-    id VARCHAR(36) PRIMARY KEY,
-    place_id VARCHAR(36) NOT NULL,
-    name VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (place_id) REFERENCES places(id)
-);
 
 -- Create Places table
 CREATE TABLE places (
@@ -54,13 +45,13 @@ CREATE TABLE places (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     address VARCHAR(255) NOT NULL,
-    city VARCHAR(100) NOT NULL,
+    city_id INT NOT NULL,
     country VARCHAR(100) NOT NULL,
     price_per_night DECIMAL(10, 2) NOT NULL,
     max_guests INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (host_id) REFERENCES users(id)
+    FOREIGN KEY (host_id, city_id) REFERENCES users(id)
 );
 
 -- Insert initial data into Places table
@@ -70,8 +61,12 @@ INSERT INTO places (host_id, title, description, address, city, country, price_p
 
 -- Create Amenities table
 CREATE TABLE amenities (
-    id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    id VARCHAR(36) PRIMARY KEY,
+    place_id VARCHAR(36) NOT NULL,
+    name VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (place_id) REFERENCES places(id)
 );
 
 -- Insert initial data into Amenities table
