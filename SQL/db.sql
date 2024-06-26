@@ -6,7 +6,7 @@ USE hbnb;
 
 -- Create Users table
 CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE countries (
 
 -- Create cities table
 CREATE TABLE cities (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     country_code CHAR(2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,7 +49,7 @@ CREATE TABLE amenities (
 
 -- Create Places table
 CREATE TABLE places (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY,
     host_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
@@ -70,7 +70,7 @@ INSERT INTO places (host_id, title, description, address, city, country, price_p
 
 -- Create Amenities table
 CREATE TABLE amenities (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -100,7 +100,7 @@ INSERT INTO place_amenities (place_id, amenity_id) VALUES
 
 -- Create Reviews table
 CREATE TABLE reviews (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY,
     place_id INT NOT NULL,
     user_id INT NOT NULL,
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
