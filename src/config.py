@@ -1,40 +1,51 @@
 import os
-from abc import ABC
+import sqlite3
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 
-# Base configuration class with common settings
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '../.env'))
+
 class Config:
     DEBUG = False
     TESTING = False
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    SECRET_KEY = os.getenv('SECRET_KEY', 'super-secret')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'super-secret')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///hbnb_dev.db')
 
-
-# Development configuration inherits from Config
 class DevelopmentConfig(Config):
-    # Development-specific database URI, defaults to SQLite if not set
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///development.db")
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///hbnb_dev.db')
+    
+    # Example for database creation logic
+    db_file = os.path.join(basedir, 'development.db')
+    try:
+        if not os.path.exists(db_file):
+            conn = sqlite3.connect(db_file)
+            cursor = conn.cursor()
 
-    DEBUG = True  # Enable debug mode for development
+            # Create 'users' table if it does not exist
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE,
+                    email TEXT NOT NULL UNIQUE
+                )
+            ''')
 
+            print("Database created successfully!")
 
-# Testing configuration inherits from Config
+            conn.commit()
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+    finally:
+        if 'conn' in locals():
+            conn.close()
+
 class TestingConfig(Config):
-    TESTING = True  # Enable testing mode
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL', 'sqlite:///:memory:')
 
-    # Use in-memory SQLite database for testing
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-
-
-# Production configuration inherits from Config
 class ProductionConfig(Config):
-    # Production database URI, defaults to PostgreSQL if DATABASE_URL is set, otherwise local SQLite
-    TESTING = False
-    DEBUG = False
-
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "postgresql://user:password@localhost/hbnb_prod"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URL', 'postgresql://user:password@localhost/hbnb_prod')
