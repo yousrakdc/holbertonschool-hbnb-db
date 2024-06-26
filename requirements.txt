@@ -1,6 +1,8 @@
+alembic
 flask
 flask-cors
 flask-SQLAlchemy
-SQLAlchemy
-
 gunicorn
+jwt
+python-dotenv
+SQLAlchemy
