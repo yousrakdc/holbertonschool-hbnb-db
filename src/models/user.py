@@ -1,3 +1,4 @@
+from src import Flask
 from src.models.base import Base
 
 
