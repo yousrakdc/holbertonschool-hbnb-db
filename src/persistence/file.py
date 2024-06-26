@@ -89,7 +89,10 @@ class DataManager(Repository):
         Returns:
             list: A list of all objects of the specified model.
         """
-        return self.__data.get(model_name, [])
+        if self.use_database:
+            return self.db_session.query(self.models[model_name]).all()
+        else:
+            return self.__data.get(model_name, [])
 
     def get(self, model_name: str, obj_id: str):
         """
@@ -102,9 +105,12 @@ class DataManager(Repository):
         Returns:
             Base: The object with the specified ID, or None if not found.
         """
-        for obj in self.get_all(model_name):
-            if obj.id == obj_id:
-                return obj
+        if self.use_database:
+            return self.db_session.query(self.models[model_name]).get(obj_id)
+        else:
+            for obj in self.get_all(model_name):
+                if obj.id == obj_id:
+                    return obj
         return None
 
     def reload(self):
