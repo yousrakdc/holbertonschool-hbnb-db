@@ -52,7 +52,9 @@ def login():
     if user and bcrypt.check_password_hash(user.password_hash, password):
         access_token = create_access_token(identity={'email': user.email, 'is_admin': user.is_admin})
         return jsonify(access_token=access_token), 200
-    return jsonify({"msg": "Wrong email or password"}), 401
+    else:
+        # Return error message if credentials are invalid
+        return jsonify({"msg": "Wrong email or password"}), 401
 
 # Example of a protected route
 @users_bp.route('/protected', methods=['GET'])
@@ -60,3 +62,15 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+
+@users_bp.route('/admin', methods=['GET'])
+@jwt_required()
+def admin_protected():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if user and user.is_admin:
+        return jsonify(message="Admin protected endpoint"), 200
+    else:
+        return jsonify(message="Admin access required"), 403
