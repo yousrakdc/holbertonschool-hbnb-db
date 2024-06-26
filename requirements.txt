@@ -1,8 +1,10 @@
 alembic
+config
 flask
 flask-cors
 flask-SQLAlchemy
 gunicorn
 jwt
 python-dotenv
+requests
 SQLAlchemy
