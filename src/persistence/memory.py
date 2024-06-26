@@ -1,5 +1,4 @@
 from datetime import datetime
-from src.models.base import Base
 from src.persistence.repository import Repository
 from utils.populate import populate_db
 

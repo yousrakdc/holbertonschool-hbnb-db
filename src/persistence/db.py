@@ -12,7 +12,6 @@
     - reload (which can be empty)
 """
 
-from src.models.base import Base
 from src.persistence.repository import Repository
 from src import db
 
