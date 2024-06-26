@@ -1,14 +1,15 @@
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
-from sqlalchemy import Column, Integer, String, ForeignKey, func, DateTime, Boolean, Text, Float
+from sqlalchemy import Column, String, Text, Float, ForeignKey, Integer
+from datetime import datetime
 from src import db
+
 
 class Place(Base):
     """Place:
     amenity_ids (List of UUIDs referencing Amenities),
     """
-    __tablename__ = 'places'
 
     id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)

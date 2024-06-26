@@ -2,11 +2,11 @@ from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
 from src import db
+from sqlalchemy import Column, Text, Float, DateTime, Integer, ForeignKey
+from datetime import datetime
 
+class Review(Base):
 
-class Review(Base, db.Model):
-
-    __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
     place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
