@@ -1,4 +1,5 @@
 from src.persistence.repository import Repository
+from src.models.base import Base
 from src import db
 
 class DBRepository(Repository):
