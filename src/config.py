@@ -10,8 +10,6 @@ class Config:
     DEBUG = False
     TESTING = False
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
     SECRET_KEY = os.getenv('SECRET_KEY', 'super-secret')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'super-secret')
 
@@ -67,5 +65,6 @@ class ProductionConfig(Config):
     )
 
 app = Flask(__name__)
+# Switch to DevelopmentConfig mode or ProductionConfig mode depending on the environment variable
 app.config.from_object('config.DevelopmentConfig' if os.environ.get('ENV') == 'development' else 'config.ProductionConfig')
 db = SQLAlchemy(app)

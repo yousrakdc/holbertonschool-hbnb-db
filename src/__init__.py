@@ -1,11 +1,18 @@
 from flask import Flask
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_cors import CORS
+from src import routes, models
 
 cors = CORS()
 
 
 def create_app(config_class=None) -> Flask:
     app = Flask(__name__)
+    app.config.from_object(Config)
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db)
 
     app.url_map.strict_slashes = False
 
