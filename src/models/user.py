@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from src import db, bcrypt
 
+
 class User(Base):
     
     id = db.Column(db.String(36), primary_key=True)
