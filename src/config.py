@@ -11,7 +11,7 @@ class Config:
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'super-secret')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'hohohoitsasecret')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///hbnb_dev.db')
 
 class DevelopmentConfig(Config):
@@ -19,7 +19,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///hbnb_dev.db')
     
     # Example for database creation logic
-    db_file = os.path.join(basedir, 'development.db')
+    db_file = os.path.join(basedir, 'SQLite_database.db')
     try:
         if not os.path.exists(db_file):
             conn = sqlite3.connect(db_file)
