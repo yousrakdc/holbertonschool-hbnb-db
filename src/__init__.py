@@ -35,10 +35,15 @@ def create_app(config_class=None) -> Flask:
             config_class = DevelopmentConfig
 
     app.config.from_object(config_class)
-
-    register_extensions(app)
-    register_routes(app)
-    register_handlers(app)
+    
+    # Configure the database URI based on environment variables
+    if env == 'production':
+        app.config['DATABASE_URL'] = os.getenv('PROD_DATABASE_URL')
+    elif env == 'testing':
+        app.config['DATABASE_URL'] = os.getenv('TEST_DATABASE_URL')
+    else:
+        # Define a default URI if DATABASE_URL is not set in .env or config.py
+        app.config['DATABASE_URL'] = 'sqlite:///hbnb_dev.db'
 
     return app
 
