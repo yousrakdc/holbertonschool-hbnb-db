@@ -57,9 +57,14 @@ def login():
     # Get the user by email from the database
     user = db.get_by_email(email)
     if user and bcrypt.check_password_hash(user.password_hash, password):
-        # If the user is found and the password matches, create an access token
-        access_token = create_access_token(identity=user.id)  # Use user ID as the token identity
-        return jsonify(access_token=access_token), 200  # Return the access token
+        # Prepare additional claims for the JWT
+        additional_claims = {"is_admin": user.is_admin}  # Add more roles if needed
+
+        # Create access token with identity (user ID) and additional claims (roles)
+        access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
+
+        # Return the access token
+        return jsonify(access_token=access_token), 200
 
     return jsonify({"msg": "Wrong email or password"}), 401  # Return 401 if email or password is incorrect
 

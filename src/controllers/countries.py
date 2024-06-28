@@ -1,5 +1,5 @@
 from flask import abort
-from ..models.base import Base
+from src.models.base import Base
 from src.models.city import City
 from src.models.country import Country
 
