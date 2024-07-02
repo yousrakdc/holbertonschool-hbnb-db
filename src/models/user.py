@@ -1,11 +1,22 @@
-from src import Flask
 from src.models.base import Base
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy.sql import func
+from datetime import datetime
+from src import db
 
 
 class User(Base):
-    email: str
-    first_name: str
-    last_name: str
+    
+    id = db.Column(db.String(36), primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    first_name = db.Column(db.String(50), nullable=True)
+    last_name = db.Column(db.String(50), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.current_timestamp())
+
 
     def __init__(self, email: str, first_name: str, last_name: str, **kw) -> None:
         super().__init__(**kw)
