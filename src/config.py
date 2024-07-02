@@ -15,16 +15,16 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'hohohoitsasecret')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'hohohoitsasecret')
     JWT_ACCESS_TOKEN_EXPIRES = 3600
-    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///hbnb_dev.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///hbnb.db')
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///development.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///development.db')
 
 class ProductionConfig(Config):
     DEBUG = False
-    DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost/hbnb_prod')
+    SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URL', 'postgresql://user:password@localhost/hbnb_prod')
 
 class TestingConfig(Config):
     TESTING = True
-    DATABASE_URL = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL', 'sqlite:///:memory:')

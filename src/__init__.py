@@ -7,7 +7,9 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 from src.config import DevelopmentConfig, ProductionConfig, TestingConfig
+
 
 load_dotenv()
 
@@ -16,6 +18,7 @@ db = SQLAlchemy()
 jwt = JWTManager()
 bcrypt = Bcrypt()
 
+
 def create_app(config_class=None) -> Flask:
     """
     Create a Flask app with the given configuration class.
@@ -23,27 +26,25 @@ def create_app(config_class=None) -> Flask:
     """
     app = Flask(__name__)
     app.url_map.strict_slashes = False
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hbnb.db'
+    
 
     env = os.getenv('ENV', 'development')
 
-    if config_class is None:
-        if env == 'production':
-            config_class = ProductionConfig
-        elif env == 'testing':
-            config_class = TestingConfig
-        else:
-            config_class = DevelopmentConfig
+    if env == 'development':
+        app.config.from_object('src.config.DevelopmentConfig')
+    elif env == 'testing':
+        app.config.from_object('src.config.TestingConfig')
+    elif env == 'production':
+        app.config.from_object('src.config.ProductionConfig')
 
     app.config.from_object(config_class)
     
-    # Configure the database URI based on environment variables
     if env == 'production':
-        app.config['DATABASE_URL'] = os.getenv('PROD_DATABASE_URL')
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('PROD_DATABASE_URL')
     elif env == 'testing':
-        app.config['DATABASE_URL'] = os.getenv('TEST_DATABASE_URL')
-    else:
-        # Define a default URI if DATABASE_URL is not set in .env or config.py
-        app.config['DATABASE_URL'] = 'sqlite:///hbnb_dev.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL')
 
     return app
 
@@ -75,6 +76,9 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(places_bp)
     app.register_blueprint(reviews_bp)
     app.register_blueprint(amenities_bp)
+    
+    register_routes(app)
+    register_handlers(app)
 
 def register_handlers(app: Flask) -> None:
     """Register the error handlers for the Flask app."""
