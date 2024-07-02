@@ -42,11 +42,11 @@ class User(Base):
 
     def set_password(self, password: str):
         """Set password method"""
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password: str) -> bool:
         """Check password method"""
-        return bcrypt.check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password, password)
     
     @staticmethod
     def create(user: dict) -> "User":
