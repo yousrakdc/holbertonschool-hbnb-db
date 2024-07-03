@@ -27,4 +27,7 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    ENV= 'testing'
     SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL', 'sqlite:///:memory:')
+    SECRET_KEY = 'hohohoitsasecret'
+    JWT_SECRET_KEY = 'hohohoitsasecret'
