@@ -6,7 +6,10 @@ from datetime import datetime
 from src import db, bcrypt
 
 
+
 class User(Base):
+    
+    __tablename__='users'
     
     id = db.Column(db.String(36), primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)

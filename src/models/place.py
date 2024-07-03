@@ -8,6 +8,8 @@ from flask_jwt_extended import get_jwt_identity
 
 
 class Place(Base):
+    
+    __tablename__ = 'places'
     """
     Place model:
     Represents a place or property with various attributes and relationships.
@@ -20,7 +22,7 @@ class Place(Base):
     address = db.Column(db.String(255), nullable=False)  # Address of the place
     latitude = db.Column(db.Float, nullable=False)  # Latitude for location
     longitude = db.Column(db.Float, nullable=False)  # Longitude for location
-    host_id = db.Column(db.String(36), db.ForeignKey('hosts.id'), nullable=False)  # Foreign key to Host
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # Foreign key to Host
     city_id = db.Column(db.String(36), db.ForeignKey('cities.id'), nullable=False)  # Foreign key to City
     price_per_night = db.Column(db.Integer, nullable=False)  # Price per night
     number_of_rooms = db.Column(db.Integer, nullable=False)  # Number of rooms
@@ -46,7 +48,7 @@ class Place(Base):
         self.city_id = data["city_id"]
         self.latitude = float(data.get("latitude", 0.0))
         self.longitude = float(data.get("longitude", 0.0))
-        self.host_id = data["host_id"]
+        self.user_id = data["user_id"]
         self.price_per_night = int(data.get("price_per_night", 0))
         self.number_of_rooms = int(data.get("number_of_rooms", 0))
         self.number_of_bathrooms = int(data.get("number_of_bathrooms", 0))
@@ -74,7 +76,7 @@ class Place(Base):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "city_id": self.city_id,
-            "host_id": self.host_id,
+            "user_id": self.user_id,
             "price_per_night": self.price_per_night,
             "number_of_rooms": self.number_of_rooms,
             "number_of_bathrooms": self.number_of_bathrooms,
@@ -103,10 +105,10 @@ class Place(Base):
         """
         from src.persistence import db
 
-        user: User | None = User.get(data["host_id"])
+        user: User | None = User.get(data["user_id"])
 
         if not user:
-            raise ValueError(f"User with ID {data['host_id']} not found")
+            raise ValueError(f"User with ID {data['user_id']} not found")
 
         city: City | None = City.get(data["city_id"])
 
