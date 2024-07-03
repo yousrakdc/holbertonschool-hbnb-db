@@ -2,10 +2,27 @@
 
 import requests
 import uuid
-
-from tests import test_functions
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+from src.models.amenity import Amenity, PlaceAmenity
+from src.models.base import Base
+from src import create_app, db as database
 
 API_URL = "http://localhost:5000"
+DB_URL = 'sqlite:///development.db'
+os.environ['USE_DATABASE'] = 'true'
+
+
+def setup_database():
+    """
+    Helper function to set up the database session and engine.
+    """
+    engine = create_engine(DB_URL)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
 
 
 def create_unique_amenity():
@@ -121,12 +138,12 @@ def test_delete_amenity():
 
 if __name__ == "__main__":
     # Run the tests
-    test_functions(
-        [
-            test_get_amenities,
-            test_post_amenity,
-            test_get_amenity,
-            test_put_amenity,
-            test_delete_amenity,
-        ]
-    )
+    session = setup_database()
+    app = create_app(session)
+    with app.app_context():
+        database.create_all()
+    test_get_amenities()
+    test_post_amenity()
+    test_get_amenity()
+    test_put_amenity()
+    test_delete_amenity()
