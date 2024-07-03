@@ -6,7 +6,7 @@ from src.controllers.users import (
     get_users,
     update_user,
 )
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from src.models.user import User
 from src import bcrypt
 from functools import wraps
@@ -20,20 +20,31 @@ def check_user_permission(func):
     @wraps(func)
     @jwt_required()
     def decorated_function(user_id, *args, **kwargs):
-        current_user_id = get_jwt_identity()  # Get the identity of the current user from the JWT
-        user = db.get('user', user_id)  # Retrieve the user by ID from the database
+        current_user_id = get_jwt_identity()
+        user = db.get('user', user_id)  # Assuming db.get() retrieves user by ID
 
         if not user:
-            return jsonify({"msg": "User not found"}), 404  # Return 404 if user not found
+            return jsonify({"msg": "User not found"}), 404
 
-        # Check if the current user is authorized to access this resource
         if current_user_id != user.id:
-            return jsonify({"msg": "Unauthorized"}), 401  # Return 401 if user is not authorized
+            return jsonify({"msg": "Unauthorized"}), 401
 
-        # If authorized, execute the function
         return func(user_id, *args, **kwargs)
 
     return decorated_function
+
+# Decorator to check admin permission
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        @jwt_required()
+        def decorator(*args, **kwargs):
+            claims = get_jwt()
+            if not claims.get("is_admin"):
+                return jsonify(msg="Admins only!"), 403
+            return fn(*args, **kwargs)
+        return decorator
+    return wrapper
 
 # Create a Blueprint for the users module
 users_bp = Blueprint("users", __name__, url_prefix="/users")
@@ -48,45 +59,32 @@ users_bp.route("/<user_id>", methods=["DELETE"])(jwt_required()(check_user_permi
 
 @users_bp.route('/login', methods=['POST'])
 def login():
-    # Extract email and password from the request body
+    print("Login attempt:", request.json)
     email = request.json.get('email', None)
     password = request.json.get('password', None)
-    if not email or not password:
-        return jsonify({"msg": "Missing email or password"}), 400  # Return 400 if email or password is missing
-
-    # Get the user by email from the database
-    user = db.get_by_email(email)
-    if user and bcrypt.check_password_hash(user.password_hash, password):
-        # Prepare additional claims for the JWT
-        additional_claims = {"is_admin": user.is_admin}  # Add more roles if needed
-
-        # Create access token with identity (user ID) and additional claims (roles)
-        access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
-
-        # Return the access token
+    
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        access_token = create_access_token(identity=user.id, additional_claims={"is_admin": user.is_admin})
         return jsonify(access_token=access_token), 200
+    return jsonify({"msg": "Bad username or password"}), 401
 
-    return jsonify({"msg": "Wrong email or password"}), 401  # Return 401 if email or password is incorrect
-
-# Example of a protected route
 @users_bp.route('/protected', methods=['GET'])
-@jwt_required()  # JWT is required to access this route
+@jwt_required()
 def protected():
-    current_user_id = get_jwt_identity()  # Get the identity of the current user from the JWT
-    user = db.get('user', current_user_id)  # Retrieve the user by ID from the database
+    current_user_id = get_jwt_identity()
+    return jsonify(logged_in_as=current_user_id), 200
 
-    if user:
-        return jsonify(logged_in_as=user.email), 200  # Return the current user's email
-    return jsonify({"msg": "User not found"}), 404  # Return 404 if user not found
-
-# Example of an admin-protected route
 @users_bp.route('/admin', methods=['GET'])
-@jwt_required()  # JWT is required to access this route
-def admin_protected():
-    current_user_id = get_jwt_identity()  # Get the identity of the current user from the JWT
-    user = db.get('user', current_user_id)  # Retrieve the user by ID from the database
+@admin_required()
+def admin_only():
+    return jsonify(message="Welcome, admin!"), 200
 
-    if user and user.is_admin:
-        return jsonify(message="Admin protected endpoint"), 200  # Return a message if the user is an admin
-    else:
-        return jsonify(message="Admin access required"), 403  # Return 403 if the user is not an admin
+@users_bp.route('/admin/endpoint', methods=['GET'])
+@jwt_required()
+def admin_endpoint():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user or not user.is_admin:
+        return jsonify({"msg": "Forbidden"}), 403
+    return jsonify({"msg": "Welcome Admin"}), 200
