@@ -3,6 +3,7 @@ config
 flask
 flask-cors
 flask-SQLAlchemy
+SQLAlchemy
 gunicorn
 jwt
 python-dotenv

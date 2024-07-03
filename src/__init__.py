@@ -14,6 +14,7 @@ db = SQLAlchemy()
 jwt = JWTManager()
 bcrypt = Bcrypt()
 
+
 def create_app(config_class=None) -> Flask:
     print("Creating app...")
     app = Flask(__name__)

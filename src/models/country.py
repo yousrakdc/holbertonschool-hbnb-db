@@ -1,6 +1,7 @@
 from src import db
 from sqlalchemy import Column, String, Integer
 
+
 class Country(db.Model):
     __tablename__ = 'countries'
 

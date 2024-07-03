@@ -6,7 +6,6 @@ from datetime import datetime
 from src import db, bcrypt
 
 
-
 class User(Base):
     
     __tablename__='users'
