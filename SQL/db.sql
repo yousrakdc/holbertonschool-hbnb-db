@@ -29,7 +29,7 @@ CREATE TABLE cities (
 -- Create Places table
 CREATE TABLE places (
     id INT PRIMARY KEY,
-    host_id INT NOT NULL,
+    user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     address VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE places (
     max_guests INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (host_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (city_id) REFERENCES cities(id)
 );
 
@@ -85,7 +85,7 @@ INSERT INTO cities (id, name, country_code)
 VALUES (1, 'New York', 'US');
 
 -- Insert initial data into Places table
-INSERT INTO places (id, host_id, title, description, address, city_id, country, price_per_night, max_guests)
+INSERT INTO places (id, user_id, title, description, address, city_id, country, price_per_night, max_guests)
 VALUES (1, 1, 'Cozy Apartment', 'A nice and cozy apartment in the city center.', '123 Main St', 1, 'US', 75.00, 2);
 
 -- Insert initial data into Amenities table
